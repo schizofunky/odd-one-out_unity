@@ -42,9 +42,16 @@ public class LevelController : MonoBehaviour {
 		int imagesToCreate = 3;
 		imagesForLevel = new GameObject[imagesToCreate];
 		imagesCreated = 0;
-		createImageObject(-3,1,"Good");
-		createImageObject(0,1,"Good");
-		createImageObject(3,1,"BadEasy");
+		Vector2[] levelCoordinates = {new Vector2(-3,1),new Vector2(0,1),new Vector2(3,1)};
+		int badIndex = (int) Mathf.Round(Random.Range(0,levelCoordinates.Length-1));
+		for (int imageCounter = 0; imageCounter < levelCoordinates.Length; imageCounter++){
+			if(imageCounter == badIndex){
+				createImageObject(levelCoordinates[imageCounter],"BadEasy");
+			}
+			else{
+				createImageObject(levelCoordinates[imageCounter],"Good");	
+			}
+		}
 	}
 
 	void destroyLevel(){
@@ -58,9 +65,9 @@ public class LevelController : MonoBehaviour {
 	}
 
 
-	void createImageObject(int x, int y, string type){
+	void createImageObject(Vector2 coordinates, string type){
 		GameObject go = Instantiate(imageHolder) as GameObject;
-		go.transform.position = new Vector3(x, y, 0);
+		go.transform.position = new Vector3(coordinates.x, coordinates.y, 0);
 		go.renderer.material.mainTexture = Resources.Load("Robot"+currentRobot+type) as Texture;
 		if(type != "Good"){
 			go.GetComponent<ImageHandler>().isCorrect = true;

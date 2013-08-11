@@ -62,11 +62,18 @@ public class LevelController : MonoBehaviour {
 		GameObject go = Instantiate(imageHolder) as GameObject;
 		go.transform.position = new Vector3(x, y, 0);
 		go.renderer.material.mainTexture = Resources.Load("Robot"+currentRobot+type) as Texture;
+		if(type != "Good"){
+			go.GetComponent<ImageHandler>().isCorrect = true;
+		}
+		ImageHandler.MouseHandler correctHandler = onCorrectClick;
+		ImageHandler.MouseHandler wrongHandler = onWrongClick;
+		go.GetComponent<ImageHandler>().onCorrectClick = correctHandler;
+		go.GetComponent<ImageHandler>().onWrongClick = wrongHandler;
 		imagesForLevel[imagesCreated] = go;
 		imagesCreated++;
 	}
 
-	void onCorrectImageChosen(){
+	public void onCorrectClick(){
 		updateScore();
 		destroyLevel();
 		createLevel();	
@@ -76,17 +83,15 @@ public class LevelController : MonoBehaviour {
 
 	}
 
-	void onWrongImageChosen(){
+	public void onWrongClick(){
 		reduceLives();	
 		destroyLevel();
 		createLevel();	
 	}
 
 	void reduceLives(){
-		print("you just lost a life "+lives);
 		lives--;
 		if(lives <= 0){
-			print("Game Over");
 			gameOver = true;
 		}
 	}

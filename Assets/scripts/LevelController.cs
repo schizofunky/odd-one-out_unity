@@ -36,17 +36,28 @@ public class LevelController : MonoBehaviour {
 		}
 	}
 
-	void createLevel(){
-		currentRobot = 4;
+	public void onCorrectClick(){
+		updateScore();
+		destroyLevel();
+		createLevel();	
+	}
+
+	public void onWrongClick(){
+		reduceLives();	
+		destroyLevel();
+		createLevel();	
+	}
+
+	private void createLevel(){
+		currentRobot = getRobotType();
 		timeLimit = 100;
-		int imagesToCreate = 3;
-		imagesForLevel = new GameObject[imagesToCreate];
 		imagesCreated = 0;
-		Vector2[] levelCoordinates = {new Vector2(-3,1),new Vector2(0,1),new Vector2(3,1)};
-		int badIndex = (int) Mathf.Round(Random.Range(0,levelCoordinates.Length-1));
+		Vector2[] levelCoordinates = getLevelCoordinates();
+		imagesForLevel = new GameObject[levelCoordinates.Length];
+		int badIndex = GetRandomIndex(levelCoordinates.Length);
 		for (int imageCounter = 0; imageCounter < levelCoordinates.Length; imageCounter++){
 			if(imageCounter == badIndex){
-				createImageObject(levelCoordinates[imageCounter],"BadEasy");
+				createImageObject(levelCoordinates[imageCounter],"Bad"+getImageDifficulty());
 			}
 			else{
 				createImageObject(levelCoordinates[imageCounter],"Good");	
@@ -54,7 +65,23 @@ public class LevelController : MonoBehaviour {
 		}
 	}
 
-	void destroyLevel(){
+	private string getImageDifficulty(){
+		string[] difficulties = {"Easy","Medium","Hard"};
+		return difficulties[GetRandomIndex(difficulties.Length)];
+	}
+
+	private int getRobotType(){
+		return 1+GetRandomIndex(10);
+	}
+
+	private Vector2[] getLevelCoordinates(){
+		Vector2[] threeImages = {new Vector2(-3,1),new Vector2(0,1),new Vector2(3,1)};
+		Vector2[] fourImages = {new Vector2(-4,3),new Vector2(-4,-1),new Vector2(4,3),new Vector2(4,-1)};
+		Vector2[][] levelLists = {threeImages,fourImages};
+		return levelLists[GetRandomIndex(levelLists.Length)];
+	}
+
+	private void destroyLevel(){
 		//need to destroy all of the robots we have created
 		for(int i = 0; i < imagesCreated; i++)
 		{
@@ -65,9 +92,10 @@ public class LevelController : MonoBehaviour {
 	}
 
 
-	void createImageObject(Vector2 coordinates, string type){
+	private void createImageObject(Vector2 coordinates, string type){
 		GameObject go = Instantiate(imageHolder) as GameObject;
 		go.transform.position = new Vector3(coordinates.x, coordinates.y, 0);
+		print("Creating:"+currentRobot+type);
 		go.renderer.material.mainTexture = Resources.Load("Robot"+currentRobot+type) as Texture;
 		if(type != "Good"){
 			go.GetComponent<ImageHandler>().isCorrect = true;
@@ -80,26 +108,18 @@ public class LevelController : MonoBehaviour {
 		imagesCreated++;
 	}
 
-	public void onCorrectClick(){
-		updateScore();
-		destroyLevel();
-		createLevel();	
-	}
-
-	void updateScore(){
+	private void updateScore(){
 
 	}
 
-	public void onWrongClick(){
-		reduceLives();	
-		destroyLevel();
-		createLevel();	
-	}
-
-	void reduceLives(){
+	private void reduceLives(){
 		lives--;
 		if(lives <= 0){
 			gameOver = true;
 		}
+	}
+
+	private int GetRandomIndex(int length){
+		return (int) Mathf.Round(Random.value * (length-1));
 	}
 }

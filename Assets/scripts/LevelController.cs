@@ -5,18 +5,21 @@ public class LevelController : MonoBehaviour {
 
 	public int maximumLives = 5;
 	public GameObject imageHolder;
+	public GUIText scoreText;
 
 	private int lives;
 	private int currentRobot;
 	private int imagesCreated;
 	private bool gameOver;
 	private float timeLimit;
+	private float currentScore;
 	private GameObject[] imagesForLevel;
 
 	// Use this for initialization
 	void Start () {
 		lives = maximumLives;
 		gameOver = false;
+		currentScore = 0;
 		createLevel();
 	}
 	
@@ -77,7 +80,9 @@ public class LevelController : MonoBehaviour {
 	private Vector2[] getLevelCoordinates(){
 		Vector2[] threeImages = {new Vector2(-3,1),new Vector2(0,1),new Vector2(3,1)};
 		Vector2[] fourImages = {new Vector2(-4,3),new Vector2(-4,-1),new Vector2(4,3),new Vector2(4,-1)};
-		Vector2[][] levelLists = {threeImages,fourImages};
+		Vector2[] nineImages = {new Vector2(-3,1),new Vector2(0,1),new Vector2(3,1),new Vector2(-3,-1.3f),new Vector2(0,-1.3f),new Vector2(3,-1.3f),new Vector2(-3,3.3f),new Vector2(0,3.3f),new Vector2(3,3.3f)};
+		Vector2[] sixteenImages = {new Vector2(-3.8f,2.1f),new Vector2(-1.3f,2.1f),new Vector2(1.2f,2.1f),new Vector2(3.7f,2.1f),new Vector2(-3.8f,0),new Vector2(-1.3f,0),new Vector2(1.2f,0),new Vector2(3.7f,0),new Vector2(-3.8f,-2.2f),new Vector2(-1.3f,-2.2f),new Vector2(1.2f,-2.2f),new Vector2(3.7f,-2.2f),new Vector2(-3.8f,4.2f),new Vector2(-1.3f,4.2f),new Vector2(1.2f,4.2f),new Vector2(3.7f,4.2f)};
+		Vector2[][] levelLists = {threeImages,fourImages,nineImages,sixteenImages};
 		return levelLists[GetRandomIndex(levelLists.Length)];
 	}
 
@@ -109,7 +114,8 @@ public class LevelController : MonoBehaviour {
 	}
 
 	private void updateScore(){
-
+		currentScore += Mathf.Round(10*timeLimit);
+		scoreText.text = currentScore.ToString();
 	}
 
 	private void reduceLives(){

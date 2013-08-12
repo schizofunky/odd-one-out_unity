@@ -18,9 +18,11 @@ public class LevelController : MonoBehaviour {
 	private float currentScore;
 	private GameObject[] imagesForLevel;
 	private GameObject[] lifeObjects;
+	private AudioSource fx;
 
 	// Use this for initialization
 	void Start () {
+		fx = gameObject.AddComponent<AudioSource>();
 		lives = maximumLives;
 		gameOver = false;
 		currentScore = 0;		
@@ -45,12 +47,16 @@ public class LevelController : MonoBehaviour {
 	}
 
 	public void onCorrectClick(){
+		fx.clip = correctSfx;
+		fx.Play();
 		updateScore();
 		destroyLevel();
 		createLevel();	
 	}
 
 	public void onWrongClick(){
+		fx.clip = wrongSfx;
+		fx.Play();
 		reduceLives();	
 		destroyLevel();
 		createLevel();	

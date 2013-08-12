@@ -5,6 +5,7 @@ public class LevelController : MonoBehaviour {
 
 	public int maximumLives = 5;
 	public GameObject imageHolder;
+	public GameObject life;
 	public GUIText scoreText;
 
 	private int lives;
@@ -14,12 +15,14 @@ public class LevelController : MonoBehaviour {
 	private float timeLimit;
 	private float currentScore;
 	private GameObject[] imagesForLevel;
+	private GameObject[] lifeObjects;
 
 	// Use this for initialization
 	void Start () {
 		lives = maximumLives;
 		gameOver = false;
-		currentScore = 0;
+		currentScore = 0;		
+		createLives();
 		createLevel();
 	}
 	
@@ -49,6 +52,15 @@ public class LevelController : MonoBehaviour {
 		reduceLives();	
 		destroyLevel();
 		createLevel();	
+	}
+
+	private void createLives(){
+		lifeObjects = new GameObject[maximumLives];
+		for(int lifeCounter = 0; lifeCounter < maximumLives; lifeCounter++){
+			GameObject go = Instantiate(life) as GameObject;
+			go.transform.position = new Vector3(7.12f, -3.4f+(lifeCounter*1.0f), 0);
+			lifeObjects[lifeCounter] = go;
+		}
 	}
 
 	private void createLevel(){
@@ -120,6 +132,7 @@ public class LevelController : MonoBehaviour {
 
 	private void reduceLives(){
 		lives--;
+		lifeObjects[lives].GetComponent<HeartAnimController>().loseLife();
 		if(lives <= 0){
 			gameOver = true;
 		}

@@ -7,6 +7,8 @@ public class LevelController : MonoBehaviour {
 	public GameObject imageHolder;
 	public GameObject life;
 	public GUIText scoreText;
+	public AudioClip correctSfx;
+	public AudioClip wrongSfx;
 
 	private int lives;
 	private int currentRobot;
@@ -78,6 +80,7 @@ public class LevelController : MonoBehaviour {
 				createImageObject(levelCoordinates[imageCounter],"Good");	
 			}
 		}
+		gameObject.GetComponent<ProgressBar>().reset();
 	}
 
 	private string getImageDifficulty(){

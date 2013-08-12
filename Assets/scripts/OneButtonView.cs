@@ -32,8 +32,6 @@ public class OneButtonView : MonoBehaviour {
 	{
 		buttonTextObject.GetComponent<MeshRenderer>().materials[0].mainTexture = rolloverText;	
 		buttonBGObject.GetComponent<MeshRenderer>().materials[0].mainTexture = rolloverBackground;
-		Color newColor = new Color(1,1,1,0.1f);
-		transform.renderer.material.color = newColor;
 	}
 	
 	void OnMouseExit() 

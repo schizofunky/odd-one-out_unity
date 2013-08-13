@@ -3,6 +3,9 @@ using System.Collections;
 
 public class LevelController : MonoBehaviour {
 
+
+	public static int currentScore;//static so it can be accessed via the Game Over scene
+
 	public int maximumLives = 5;
 	public int gameOverDelay = 20;
 	public GameObject imageHolder;
@@ -16,7 +19,6 @@ public class LevelController : MonoBehaviour {
 	private int imagesCreated;
 	private bool gameOver;
 	private float timeLimit;
-	private int currentScore;
 	private GameObject[] imagesForLevel;
 	private GameObject[] lifeObjects;
 	private AudioSource fx;

@@ -4,6 +4,7 @@ using System.Collections;
 public class LevelController : MonoBehaviour {
 
 	public int maximumLives = 5;
+	public int gameOverDelay = 20;
 	public GameObject imageHolder;
 	public GameObject life;
 	public GUIText scoreText;
@@ -15,14 +16,16 @@ public class LevelController : MonoBehaviour {
 	private int imagesCreated;
 	private bool gameOver;
 	private float timeLimit;
-	private float currentScore;
+	private int currentScore;
 	private GameObject[] imagesForLevel;
 	private GameObject[] lifeObjects;
 	private AudioSource fx;
+	private DifficultyController difficultyController;
 
 	// Use this for initialization
 	void Start () {
 		fx = gameObject.AddComponent<AudioSource>();
+		difficultyController = gameObject.GetComponent<DifficultyController>();
 		lives = maximumLives;
 		gameOver = false;
 		currentScore = 0;		
@@ -33,33 +36,38 @@ public class LevelController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(gameOver){
-			Application.LoadLevel("GameOver");
+			if(gameOverDelay-- <= 0){
+				Application.LoadLevel("GameOver");
+			}
 		}
 		else{
-			timeLimit -= 0.2f;
+			timeLimit -= difficultyController.getTimeDecaySpeed();
 
 			if(timeLimit <= 0){
 				reduceLives();
-				destroyLevel();
 				createLevel();
 			}
 		}
 	}
 
 	public void onCorrectClick(){
-		fx.clip = correctSfx;
-		fx.Play();
-		updateScore();
-		destroyLevel();
-		createLevel();	
+		if(!gameOver){
+			fx.clip = correctSfx;
+			fx.Play();
+			updateScore();
+			createLevel();	
+		}
 	}
 
 	public void onWrongClick(){
-		fx.clip = wrongSfx;
-		fx.Play();
-		reduceLives();	
-		destroyLevel();
-		createLevel();	
+		if(!gameOver){
+			fx.clip = wrongSfx;
+			fx.Play();
+			reduceLives();	
+			if(!gameOver){
+				createLevel();	
+			}
+		}	
 	}
 
 	private void createLives(){
@@ -72,15 +80,16 @@ public class LevelController : MonoBehaviour {
 	}
 
 	private void createLevel(){
+		destroyLevel();
 		currentRobot = getRobotType();
 		timeLimit = 100;
 		imagesCreated = 0;
-		Vector2[] levelCoordinates = getLevelCoordinates();
+		Vector2[] levelCoordinates = difficultyController.getLevelCoordinates();
 		imagesForLevel = new GameObject[levelCoordinates.Length];
 		int badIndex = GetRandomIndex(levelCoordinates.Length);
 		for (int imageCounter = 0; imageCounter < levelCoordinates.Length; imageCounter++){
 			if(imageCounter == badIndex){
-				createImageObject(levelCoordinates[imageCounter],"Bad"+getImageDifficulty());
+				createImageObject(levelCoordinates[imageCounter],"Bad"+difficultyController.getOddAsset());
 			}
 			else{
 				createImageObject(levelCoordinates[imageCounter],"Good");	
@@ -89,22 +98,13 @@ public class LevelController : MonoBehaviour {
 		gameObject.GetComponent<ProgressBar>().reset();
 	}
 
-	private string getImageDifficulty(){
+	/*private string getImageDifficulty(){
 		string[] difficulties = {"Easy","Medium","Hard"};
 		return difficulties[GetRandomIndex(difficulties.Length)];
-	}
+	}*/
 
 	private int getRobotType(){
 		return 1+GetRandomIndex(10);
-	}
-
-	private Vector2[] getLevelCoordinates(){
-		Vector2[] threeImages = {new Vector2(-3,1),new Vector2(0,1),new Vector2(3,1)};
-		Vector2[] fourImages = {new Vector2(-4,3),new Vector2(-4,-1),new Vector2(4,3),new Vector2(4,-1)};
-		Vector2[] nineImages = {new Vector2(-3,1),new Vector2(0,1),new Vector2(3,1),new Vector2(-3,-1.3f),new Vector2(0,-1.3f),new Vector2(3,-1.3f),new Vector2(-3,3.3f),new Vector2(0,3.3f),new Vector2(3,3.3f)};
-		Vector2[] sixteenImages = {new Vector2(-3.8f,2.1f),new Vector2(-1.3f,2.1f),new Vector2(1.2f,2.1f),new Vector2(3.7f,2.1f),new Vector2(-3.8f,0),new Vector2(-1.3f,0),new Vector2(1.2f,0),new Vector2(3.7f,0),new Vector2(-3.8f,-2.2f),new Vector2(-1.3f,-2.2f),new Vector2(1.2f,-2.2f),new Vector2(3.7f,-2.2f),new Vector2(-3.8f,4.2f),new Vector2(-1.3f,4.2f),new Vector2(1.2f,4.2f),new Vector2(3.7f,4.2f)};
-		Vector2[][] levelLists = {threeImages,fourImages,nineImages,sixteenImages};
-		return levelLists[GetRandomIndex(levelLists.Length)];
 	}
 
 	private void destroyLevel(){
@@ -126,6 +126,9 @@ public class LevelController : MonoBehaviour {
 		if(type != "Good"){
 			go.GetComponent<ImageHandler>().isCorrect = true;
 		}
+		if(difficultyController.canImagesRotate()){
+			go.transform.RotateAround(go.transform.position, go.transform.up, Random.value * 360f);
+		}
 		ImageHandler.MouseHandler correctHandler = onCorrectClick;
 		ImageHandler.MouseHandler wrongHandler = onWrongClick;
 		go.GetComponent<ImageHandler>().onCorrectClick = correctHandler;
@@ -135,7 +138,8 @@ public class LevelController : MonoBehaviour {
 	}
 
 	private void updateScore(){
-		currentScore += Mathf.Round(10*timeLimit);
+		currentScore += (int) Mathf.Round(1*timeLimit);
+		gameObject.GetComponent<DifficultyController>().updateDifficulty(currentScore);
 		scoreText.text = currentScore.ToString();
 	}
 

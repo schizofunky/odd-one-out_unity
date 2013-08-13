@@ -6,7 +6,12 @@ public class ProgressBar : MonoBehaviour {
     private float position = 100;
     private Vector2 pos = new Vector2(604,152.5f);
     private Vector2 size  = new Vector2(2.83f,14.5f);
+    private DifficultyController difficultyController;
     public GUISkin loadingSkin;
+
+    void Start(){
+        difficultyController = gameObject.GetComponent<DifficultyController>();
+    }
      
     void OnGUI(){
 	    GUI.skin = loadingSkin;
@@ -19,6 +24,6 @@ public class ProgressBar : MonoBehaviour {
      
     void Update()
     {
-    	position -= 0.2f;
+    	position -= difficultyController.getTimeDecaySpeed();
     }
 }

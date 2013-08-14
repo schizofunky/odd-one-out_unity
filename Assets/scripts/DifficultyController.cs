@@ -7,10 +7,10 @@ public class DifficultyController : MonoBehaviour {
 	private float timeDecaySpeed = 0.2f;
 	private bool imagesCanRotate = false;
 	private string[] assetDifficulties = {"Easy","Medium","Hard"};
-	private Vector2[] threeImages = {new Vector2(-3,1),new Vector2(0,1),new Vector2(3,1)};
+	private Vector2[] threeImages = {new Vector2(-5,1),new Vector2(0,1),new Vector2(5,1)};
 	private	Vector2[] fourImages = {new Vector2(-4,3),new Vector2(-4,-1),new Vector2(4,3),new Vector2(4,-1)};
-	private	Vector2[] nineImages = {new Vector2(-3,1),new Vector2(0,1),new Vector2(3,1),new Vector2(-3,-1.3f),new Vector2(0,-1.3f),new Vector2(3,-1.3f),new Vector2(-3,3.3f),new Vector2(0,3.3f),new Vector2(3,3.3f)};
-	private	Vector2[] sixteenImages = {new Vector2(-3.8f,2.1f),new Vector2(-1.3f,2.1f),new Vector2(1.2f,2.1f),new Vector2(3.7f,2.1f),new Vector2(-3.8f,0),new Vector2(-1.3f,0),new Vector2(1.2f,0),new Vector2(3.7f,0),new Vector2(-3.8f,-2.2f),new Vector2(-1.3f,-2.2f),new Vector2(1.2f,-2.2f),new Vector2(3.7f,-2.2f),new Vector2(-3.8f,4.2f),new Vector2(-1.3f,4.2f),new Vector2(1.2f,4.2f),new Vector2(3.7f,4.2f)};
+	private	Vector2[] nineImages = {new Vector2(-5,1),new Vector2(0,1),new Vector2(5,1),new Vector2(-5,-3.3f),new Vector2(0,-3.3f),new Vector2(5,-3.3f),new Vector2(-5,5.3f),new Vector2(0,5.3f),new Vector2(5,5.3f)};
+	private	Vector2[] sixteenImages = {new Vector2(-5.8f,2.7f),new Vector2(-2f,2.7f),new Vector2(2f,2.7f),new Vector2(5.7f,2.7f),new Vector2(-5.8f,-0.8f),new Vector2(-2f,-0.8f),new Vector2(2f,-0.8f),new Vector2(5.7f,-0.8f),new Vector2(-5.8f,-4.2f),new Vector2(-2f,-4.2f),new Vector2(2f,-4.2f),new Vector2(5.7f,-4.2f),new Vector2(-5.8f,6.2f),new Vector2(-2f,6.2f),new Vector2(2f,6.2f),new Vector2(5.7f,6.2f)};
 	
 
 

@@ -46,8 +46,7 @@ public class LevelController : MonoBehaviour {
 			timeLimit -= difficultyController.getTimeDecaySpeed();
 
 			if(timeLimit <= 0){
-				reduceLives();
-				createLevel();
+				onWrongClick();
 			}
 		}
 	}
@@ -76,7 +75,7 @@ public class LevelController : MonoBehaviour {
 		lifeObjects = new GameObject[maximumLives];
 		for(int lifeCounter = 0; lifeCounter < maximumLives; lifeCounter++){
 			GameObject go = Instantiate(life) as GameObject;
-			go.transform.position = new Vector3(7.12f, -3.4f+(lifeCounter*1.0f), 0);
+			go.transform.position = new Vector3(14.89f, -5.4f+(lifeCounter*2.0f), 0);
 			lifeObjects[lifeCounter] = go;
 		}
 	}
@@ -129,7 +128,7 @@ public class LevelController : MonoBehaviour {
 			go.GetComponent<ImageHandler>().isCorrect = true;
 		}
 		if(difficultyController.canImagesRotate()){
-			go.transform.RotateAround(go.transform.position, go.transform.up, Random.value * 360f);
+			go.transform.RotateAround(go.transform.position, go.transform.forward, Random.value * 360f);
 		}
 		ImageHandler.MouseHandler correctHandler = onCorrectClick;
 		ImageHandler.MouseHandler wrongHandler = onWrongClick;

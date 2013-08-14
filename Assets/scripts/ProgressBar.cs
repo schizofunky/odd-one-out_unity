@@ -4,7 +4,7 @@ using System.Collections;
 public class ProgressBar : MonoBehaviour {
 
     public float position = 100;
-    private Vector2 pos = new Vector2(604,152.5f);
+    public Vector2 pos = new Vector2(316.5f,152.5f);
     private Vector2 size  = new Vector2(2.83f,14.5f);
     private DifficultyController difficultyController;
     public GUISkin loadingSkin;
